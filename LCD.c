@@ -81,3 +81,42 @@ void LCD_init()
 	LCD_sendCommand(CURSOR_OFF); /* Cursor_OFF */
 	LCD_sendCommand(CLEAR_COMMAND); /* Clear screen */
 }
+
+void LCD_sendCommand(uint8 command)
+{
+	CLEAR_BIT(LCD_CTRL_DATA,Rs);
+	CLEAR_BIT(LCD_CTRL_DATA,RW);
+	Delay_MS(1);
+	SET_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+
+	#if(DATA_BITS_MODE == 4)
+	#ifdef UPPER_PORT_PINS
+	LCD_DATA_REG = (LCD_DATA_REG & 0x0F) | (command & 0xF0);
+	#else
+	LCD_DATA_REG = (LCD_DATA_REG & 0xF0) | ((command & 0xF0) >> 4);
+	#endif
+
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	SET_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+
+	#ifdef UPPER_PORT_PINS
+	LCD_DATA_REG = (LCD_DATA_REG & 0x0F) | ((command & 0x0F) << 4);
+	#else
+	LCD_DATA_REG = (LCD_DATA_REG & 0xF0) | (command & 0x0F);
+	#endif
+
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+
+	#elif(DATA_BITS_MODE==8)
+	LCD_DATA_REG = command;
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	#endif
+}
