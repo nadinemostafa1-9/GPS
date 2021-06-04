@@ -67,3 +67,17 @@ void Port_Init()
     (*((volatile unsigned long *)(LCD_DATA_PORT + 0x51C)))  |= 0xFF;          /* Enable Digital I/O on The whole port */
 #endif
 }
+
+void LCD_init()
+{
+	Ctrl_Init();
+        Port_Init();
+	#if (DATA_BITS_MODE == 4)
+	LCD_sendCommand(FOUR_BITS_DATA_MODE);
+	LCD_sendCommand(TWO_LINE_LCD_FOUR_BIT_MODE);
+	#elif (DATA_BITS_MODE==8)
+	LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE); /* 2 lines + 8bit mode */
+	#endif
+	LCD_sendCommand(CURSOR_OFF); /* Cursor_OFF */
+	LCD_sendCommand(CLEAR_COMMAND); /* Clear screen */
+}
