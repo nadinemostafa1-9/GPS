@@ -120,3 +120,37 @@ void LCD_sendCommand(uint8 command)
 	Delay_MS(1);
 	#endif
 }
+
+void LCD_displayCharacter(uint8 data)
+{
+	SET_BIT(LCD_CTRL_DATA,Rs);
+	CLEAR_BIT(LCD_CTRL_DATA,RW);
+	Delay_MS(1);
+	SET_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	#if(DATA_BITS_MODE == 4)
+	#ifdef UPPER_PORT_PINS
+	LCD_DATA_REG = (LCD_DATA_REG & 0x0F) | (data & 0xF0);
+	#else
+	LCD_DATA_REG = (LCD_DATA_REG & 0xF0) | ((data & 0xF0) >> 4);
+	#endif
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	SET_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	#ifdef UPPER_PORT_PINS
+	LCD_DATA_REG = (LCD_DATA_REG & 0x0F) | ((data & 0x0F) << 4);
+	#else
+	LCD_DATA_REG = (LCD_DATA_REG & 0xF0) | (data & 0x0F);
+	#endif
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	#elif(DATA_BITS_MODE==8)
+	LCD_DATA_REG = data;
+	Delay_MS(1);
+	CLEAR_BIT(LCD_CTRL_DATA,E);
+	Delay_MS(1);
+	#endif
+}
