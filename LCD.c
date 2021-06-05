@@ -154,3 +154,48 @@ void LCD_displayCharacter(uint8 data)
 	Delay_MS(1);
 	#endif
 }
+
+void LCD_displayString(const char * str)
+{
+	uint8 i = 0;
+	while( str[i] != '\0')
+	{
+		LCD_displayCharacter(str[i]);
+		i++;
+	}
+}
+
+void LCD_goToRowColumn(uint8 row, uint8 col)
+{
+	uint8 address;
+	switch(row)
+	{
+		case 0 : address = col;
+		break;
+		case 1 : address = col + 0x40;
+		break;
+		case 2 : address = col + 0x10;
+		break;
+		case 3 : address = col + 0x50;
+		break;
+	}
+	LCD_sendCommand(address | SET_CURSOR_LOCATION);
+}
+
+void LCD_displayStringRowColumn(uint8 row,uint8 col,const char *Str)
+{
+	LCD_goToRowColumn(row,col); /* go to to the required LCD position */
+	LCD_displayString(Str); /* display the string */
+}
+
+void LCD_integertostring(int data)
+{
+	uint8 buffer[16];
+	sprintf(buffer,"%d", data);
+	LCD_displayString(buffer);
+}
+
+void LCD_clearScreen()
+{
+	LCD_sendCommand(CLEAR_COMMAND);
+}
