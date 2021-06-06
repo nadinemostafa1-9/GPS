@@ -3,6 +3,8 @@
 #include <math.h>
 #include "LCD.h"
 
+#define PI 3.14 
+
 /* defines for bluetooth module */
 #define BLUETOOTH_UART_MODULE          1
 #define BLUETOOTH_MODULE_ADDRESS       UART1
@@ -15,6 +17,28 @@
 #define GPS_PORT                 PORTD
 #define GPS_TX_PIN               7
 #define GPS_RX_PIN               6
+
+/* defines for Systick */
+#define SYSTICK_PRIORITY_MASK  0x1FFFFFFF
+#define SYSTICK_INTERRUPT_PRIORITY  3
+#define SYSTICK_PRIORITY_BITS_POS   29
+
+static double distance=0;
+
+/* Global variable to hold the uart module base address*/
+volatile uint32 * GPS_module = (volatile uint32 *)UART2;
+
+
+/* Global variable to hold the uart module address of bluetooth */
+volatile uint32* bluetooth_moduleAddress = (volatile uint32 *)UART1;
+
+#define NUMBER_OF_ITERATIONS_PER_ONE_MILI_SECOND 762
+
+void Delay_MS(unsigned long long n)
+{
+    volatile unsigned long long count = 0;
+    while(count++ < (NUMBER_OF_ITERATIONS_PER_ONE_MILI_SECOND * n) );
+}
 
 /* Initialization of uart interfacing module */
 void UART_init(uint8 module, uint8 port, uint8 TX, uint8 RX, volatile uint32* current_module)
@@ -143,9 +167,9 @@ void PWM_init()
   delay = SYSCTL_PRPWM_REG;
   
     //setting pins for PE4 and PE5 pins
-  volatile unsigned long delay = 0;
+  volatile unsigned long delay1 = 0;
   SYSCTL_REGCGC2_REG |= (1<<4);
-  delay = SYSCTL_REGCGC2_REG;
+  delay1 = SYSCTL_REGCGC2_REG;
   //setting registers of PE4 and PE5 pins
   GPIO_PORTE_AMSEL_REG = 0;
   GPIO_PORTE_PCTL_REG &= 0xFF00FFFF;
@@ -200,8 +224,8 @@ void buzzer_init()
     SYSCTL_REGCGC2_REG |= 0x08;  /* enable clock to PORTD */
     delay = SYSCTL_REGCGC2_REG;
     GPIO_PORTD_AMSEL_REG &= ~(0x04);         /* Disable Analog*/
-    GPIO_PORTD_PCTL_REG  &= ~(0x04);       /* Clear PMCx bits for PB0 to use it as GPIO pin */
-    GPIO_PORTD_DIR_REG   |= 0x04;       /* Configure PF1 as output pin */
+    GPIO_PORTD_PCTL_REG  &= ~(0x04);       
+    GPIO_PORTD_DIR_REG   |= 0x04;       
     GPIO_PORTD_AFSEL_REG &= ~(0x04);      /* Disable alternative function */
     GPIO_PORTD_DEN_REG   |= 0x04;       /* Enable Digital I/O */
     GPIO_PORTD_DATA_REG  &= ~(0x04);     /* Clear bits */    
@@ -214,8 +238,8 @@ void LED_init()
     SYSCTL_REGCGC2_REG |= 0x20;  /* enable clock to PORTF */
     delay = SYSCTL_REGCGC2_REG;
     GPIO_PORTF_AMSEL_REG &= ~(0x08);         /* Disable Analog*/
-    GPIO_PORTF_PCTL_REG  &= ~(0x08);       /* Clear PMCx bits for PB0 to use it as GPIO pin */
-    GPIO_PORTF_DIR_REG   |= 0x08;       /* Configure PF1 as output pin */
+    GPIO_PORTF_PCTL_REG  &= ~(0x08);       
+    GPIO_PORTF_DIR_REG   |= 0x08;       /* Configure PF3 as output pin */
     GPIO_PORTF_AFSEL_REG &= ~(0x08);      /* Disable alternative function */
     GPIO_PORTF_DEN_REG   |= 0x08;       /* Enable Digital I/O */
     GPIO_PORTF_DATA_REG  &= ~(0x08);     /* Clear bits */
@@ -354,11 +378,39 @@ void update_distance(double lat1,double lon1,double lat2,double lon2)
         distance+=1609.344*dist;
 }
 
+/* LCD Fuction */
+void LCD_Display(uint32 Dis)
+{
+  LCD_integertostring(Dis);
+}
+
+/*Led Function*/
+void LED()
+{
+  GPIO_PORTF_DATA_REG |= 0x08; // PF3 led is on
+}
+
 
 int main()
 {
 	Init_Task();
     double lat[]={30.0808057,30.08091665,30.0814977,30.0819667,30.0821707};
     double lon[]={31.2792949,31.2794067,31.2796677,31.2804731,31.2806612};
-	
+	// distance between first and second points is 16 
+	// distance between first and third point is 85
+	// distance between first and forth point is 179
+	// distance between first and thirt point is 208
+    for(int i = 0; i < 4 ; i++)
+    {
+    	update_distance(lat[i],lon[i],lat[i+1],lon[i+1]);
+        LCD_clearScreen();
+    	LCD_Display(distance);
+        if(distance >= 100)
+        {
+          LED();
+        }
+        Delay_MS(1500);
+    }
+    while(1)
+    {}
 }
