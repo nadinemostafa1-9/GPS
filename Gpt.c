@@ -74,3 +74,19 @@ void SysTick_Stop(void)
 {
     SYSTICK_CTRL_REG = 0; /* Disable the SysTick Timer by Clear the ENABLE Bit */
 }
+
+
+/************************************************************************************
+* Service Name: SysTick_SetCallBack
+* Sync/Async: Synchronous
+* Reentrancy: reentrant
+* Parameters (in): Ptr2Func - Call Back function address
+* Parameters (inout): None
+* Parameters (out): None
+* Return value: None
+* Description: Function to Setup the SysTick Timer call back
+************************************************************************************/
+void SysTick_SetCallBack(void(*Ptr2Func)(void))
+{
+    g_SysTick_Call_Back_Ptr = Ptr2Func;
+}
