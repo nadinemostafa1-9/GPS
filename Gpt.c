@@ -15,6 +15,24 @@
 #define SYSTICK_INTERRUPT_PRIORITY  3
 #define SYSTICK_PRIORITY_BITS_POS   29
 
+/* Global pointer to function used to point upper layer functions
+ * to be used in Call Back */
+static void (*g_SysTick_Call_Back_Ptr)(void) = NULL_PTR;
+
+/************************************************************************************
+* Service Name: SysTick_Handler
+* Description: SysTick Timer ISR
+************************************************************************************/
+void SysTick_Handler(void)
+{
+    /* Check if the Timer0_setCallBack is already called */
+    if(g_SysTick_Call_Back_Ptr != NULL_PTR)
+    {
+        (*g_SysTick_Call_Back_Ptr)(); /* call the function in the scheduler using call-back concept */
+    }
+    /* No need to clear the trigger flag (COUNT) bit ... it cleared automatically by the HW */
+}
+
 /************************************************************************************
 * Service Name: SysTick_Start
 * Sync/Async: Synchronous
