@@ -75,7 +75,6 @@ void SysTick_Stop(void)
     SYSTICK_CTRL_REG = 0; /* Disable the SysTick Timer by Clear the ENABLE Bit */
 }
 
-
 /************************************************************************************
 * Service Name: SysTick_SetCallBack
 * Sync/Async: Synchronous
