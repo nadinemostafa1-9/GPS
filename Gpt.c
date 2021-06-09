@@ -41,3 +41,18 @@ void SysTick_Start(uint16 Tick_Time)
     /* Assign priority level 3 to the SysTick Interrupt */
     NVIC_SYSTEM_PRI3_REG =  (NVIC_SYSTEM_PRI3_REG & SYSTICK_PRIORITY_MASK) | (SYSTICK_INTERRUPT_PRIORITY << SYSTICK_PRIORITY_BITS_POS);
 }
+
+/************************************************************************************
+* Service Name: SysTick_Stop
+* Sync/Async: Synchronous
+* Reentrancy: reentrant
+* Parameters (in): None
+* Parameters (inout): None
+* Parameters (out): None
+* Return value: None
+* Description: Function to Stop the SysTick Timer.
+************************************************************************************/
+void SysTick_Stop(void)
+{
+    SYSTICK_CTRL_REG = 0; /* Disable the SysTick Timer by Clear the ENABLE Bit */
+}
