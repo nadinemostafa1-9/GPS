@@ -36,3 +36,23 @@ void LED_init()
     GPIO_PORTF_DEN_REG   |= 0x08;       /* Enable Digital I/O */
     GPIO_PORTF_DATA_REG  &= ~(0x08);     /* Clear bits */
 }
+
+void buzzer_on()
+{
+  SET_BIT(GPIO_PORTD_DATA_REG, 2);
+}
+
+void buzzer_off()
+{
+  CLEAR_BIT(GPIO_PORTD_DATA_REG, 2);
+}
+
+void LED_on()
+{
+  SET_BIT(GPIO_PORTF_DATA_REG, 3);
+}
+
+void LED_off()
+{
+  CLEAR_BIT(GPIO_PORTF_DATA_REG, 3);
+}
