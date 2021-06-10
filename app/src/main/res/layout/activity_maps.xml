@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+    tools:context=".MapsActivity"
+    tools:showIn="@layout/activity_maps"
+    android:id="@+id/rlayout"
+    >
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:padding="5dp"
+        android:visibility="invisible"
+        android:text="Destination"
+        android:id="@+id/stopbtn"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/select"
+        android:textSize="13dp"
+        android:layout_alignParentEnd="true"
+        />
+<fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/activity_main"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/white"
+        >
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="15dp"
+            tools:context=".MainActivity">
+
+            <Button
+                android:text="ON/OFF"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/select"
+                android:layout_width="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/white"
+
+                android:layout_height="wrap_content"
+                android:id="@+id/btnONOFF"/>
+
+            <Button
+                android:text="Enable Discoverable"
+                android:layout_marginBottom="5dp"
+
+                android:background="@drawable/select"
+                     android:padding="5dp"
+                android:textColor="@color/white"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnDiscoverable_on_off"
+                android:onClick="btnEnableDisable_Discoverable"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:padding="5dp"
+android:textColor="@color/white"
+                android:background="@drawable/select"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnFindUnpairedDevices"
+                android:text="Discover Devices"
+                android:onClick="btnDiscover"/>
+
+            <ListView
+                android:layout_margin="5dp"
+                android:layout_below="@+id/btnStartConnection"
+                android:layout_marginBottom="5dp"
+
+                android:layout_width="match_parent"
+                android:background="#D6E6ED"
+
+                android:layout_height="150dp"
+                android:id="@+id/lvNewDevices"/>
+
+            <Button
+                android:padding="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/select"
+                android:textColor="@color/white"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnFindUnpairedDevices"
+                android:id="@+id/btnStartConnection"
+                android:text="Start Connection"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <CheckBox
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get Last Path"
+                android:background="@color/purple_200"
+                android:textColor="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:padding="10dp"
+                android:id="@+id/checkLast" />
+                <CheckBox
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Location "
+                    android:background="@color/purple_200"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="10dp"
+                    android:id="@+id/checknew" />
+</LinearLayout>
+            <EditText
+                android:layout_marginBottom="5dp"
+
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="Enter Password Here"
+                android:layout_below="@+id/lvNewDevices"
+                android:layout_alignParentStart="true"
+                android:id="@+id/editText"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEND"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@drawable/select"
+
+                android:layout_marginBottom="5dp"
+
+                android:padding="5dp"
+                android:id="@+id/btnSend"
+           />
+
+            <ScrollView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:layout_marginBottom="5dp"
+
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/editText"
+
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:id="@+id/incomingmsg"
+                    android:hint="Confirming Password"
+                    android:textSize="20dp"
+                    android:background="#D6E6ED"
+                    android:layout_marginTop="10dp"
+                    />
+            </ScrollView>
+        </LinearLayout>
+    </RelativeLayout>
+    </RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:id="@+id/secondMain"
+        android:visibility="invisible"
+        map:cardCornerRadius="10dp"
+        map:cardMaxElevation="10dp"
+        android:layout_alignParentBottom="true"
+        >
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_height="180dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="210dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        map:cardMaxElevation="20dp"
+        map:cardCornerRadius="10dp"
+        android:visibility="invisible"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/btn_lay"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="150dp"
+        >
+        <RelativeLayout
+
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_baseline_arrow_back_24"
+                android:id="@+id/left_btn"
+
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_baseline_arrow_forward_24"
+                android:id="@+id/right_btn"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/down_btn"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/ic_baseline_arrow_downward_24"
+
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/up_btn"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/up"
+                />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/speed_lay"
+        android:layout_width="70dp"
+        android:layout_marginLeft="60dp"
+
+        android:visibility="invisible"
+        android:layout_marginRight="30dp"
+        map:cardCornerRadius="5dp"
+        map:cardMaxElevation="15dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_height="150dp"
+        >
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="150dp"
+            android:background="#FFFFFF"
+            android:backgroundTint="@color/black"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Speed%"
+                android:layout_marginBottom="5dp"
+                android:textStyle="italic|bold"
+                android:textAllCaps="true"
+                android:textSize="13sp"
+                />
+            <NumberPicker
+                android:layout_width="55dp"
+                android:layout_height="140dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:id="@+id/numberpicker"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
