@@ -17,4 +17,12 @@ void buzzer_init();
 
 void LED_init();
 
+void buzzer_on();
+
+void buzzer_off();
+
+void LED_on();
+
+void LED_off();
+
 #endif /* BUZZER_H_ */
