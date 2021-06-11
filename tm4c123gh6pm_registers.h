@@ -391,5 +391,18 @@ PWM1 Registers
 #define PWM1_3_COUNT_R          (*((volatile uint32 *)0x40028114))
 #define PWM1_3_CMPA_R           (*((volatile uint32 *)0x40029118))
 #define PWM1_3_CMPB_R           (*((volatile uint32 *)0x4002911C))
+/*****************************************************************************
+EEPROM Registers
+*****************************************************************************/
+#define EEPROM_BASE_ADDRESS           ((volatile uint32 *)0x00020000)
+#define EEPROM_RCGCEEPROM_REG        (*((volatile uint32 *)0x400FE658))
+#define EEPROM_EEDONE_REG            (*((volatile uint32 *)0x400AF018))
+#define EEPROM_EESUPP_REG            (*((volatile uint32 *)0x400AF01C))
+#define EEPROM_SREEPROM_REG          (*((volatile uint32 *)0x400FE558))
+#define EEPROM_FMA_REG        (*((volatile uint32 *)0x400FD000))
+#define EEPROM_FMD_REG        (*((volatile uint32 *)0x400FD004))
+#define EEPROM_FMC_REG        (*((volatile uint32 *)0x400FD008))
+#define EEPROM_BLOCK_REG        (*((volatile uint32 *)0x400AF004))
+#define EEPROM_BOOTCFG_REG     (*((volatile uint32 *)0x400FE1D0))
 
 #endif
