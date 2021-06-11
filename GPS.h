@@ -20,8 +20,14 @@ extern volatile uint8 GPS_NewMessageFlag;
 extern uint8 latitude[25];
 extern uint8 longitude[25];
 
+extern double previouse_latitude;
+extern double previouse_longitude;
+
 /* buffer to hold the whole "$GPGLL" statement. */
 extern uint8 GPS_buff[50];
+
+/* variable to hold the calculated new distance. */
+extern uint8 GPS_newDistance;
    
  /******************************************************************************
  GPS configured Pins
@@ -35,6 +41,8 @@ extern uint8 GPS_buff[50];
 void GPS_init();
 
 void GPS_parsing(void);
+
+void new_distance(double lat1,double lon1,double lat2,double lon2);
 
 void GPS_sendCoordinates();
 #endif /* GPS_H_ */
