@@ -234,3 +234,24 @@ void GPS_checking()
       trajectoryMode = 0;
   }
 }
+
+void LCD_update()
+{
+  if(systemUnlocked == 1)
+  {
+    if(trajectoryMode == 1)
+    {
+      LCD_clearScreen();
+      LCD_displayString("Distance: ");
+      LCD_integertostring(GPS_TotalDistance);
+      LCD_displayCharacter('m');
+    }
+    else if(trajectoryMode == 2)
+    {
+      LCD_clearScreen();
+      LCD_displayString("Sending last");
+      LCD_goToRowColumn(1,0);
+      LCD_displayString("tour");
+    }
+  }
+}
