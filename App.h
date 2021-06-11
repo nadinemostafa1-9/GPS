@@ -19,4 +19,6 @@ extern uint32 GPS_distance;
 /* Description: Task executes once to initialize all the Modules */
 void Init_Task(void);
 
+void bluetooth_checking(void);
+
 #endif /* APP_H_ */
