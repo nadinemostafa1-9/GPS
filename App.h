@@ -25,4 +25,8 @@ void GPS_checking();
 
 void LCD_update();
 
+void update_buzzer();
+
+void LED_update();
+
 #endif /* APP_H_ */
