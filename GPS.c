@@ -10,6 +10,9 @@
 #include "GPS.h"
 #include "Uart.h"
 #include <stdlib.h>
+#include <math.h>
+
+#define PI 3.14
 
 /* Global variable to hold the uart module base address*/
 volatile uint32 * GPS_module = (volatile uint32 *)UART2;
@@ -20,12 +23,16 @@ volatile uint8 GPS_NewMessageFlag = 0;
 /* Global buffers to hold latitude and longitude */
 uint8 latitude[25] = {0};
 uint8 longitude[25] = {0};
+double previouse_latitude = 0;
+double previouse_longitude = 0;
 
 /* buffer to hold the whole "$GPGLL" statement. */
 uint8 GPS_buff[50] = {0};
 
 /* buffer to hold the "$GPGLL" string to be cehcked */
 static uint8 GPGLL[7] = {0};
+
+uint8 GPS_newDistance =0;
 
 void GPS_init()
 {   
@@ -35,10 +42,6 @@ void GPS_init()
      3- The Rx and Tx pin numbers.
      4- Pointer to be set to the uart module base address. */
     UART_init(GPS_UART_MODULE, GPS_PORT, GPS_TX_PIN, GPS_RX_PIN, GPS_module);
-    GPS_buff[0] = '\0';
-    GPGLL[0] = '\0';
-    latitude[0] = '\0';
-    longitude[0] = '\0';
 }
 
 void GPS_receive()
@@ -90,33 +93,39 @@ void GPS_receive()
 void GPS_parsing(void)
 {
     uint8 i = 2;
-    uint8 j = 3;
+    uint8 j = 4;
     uint8 temp_buff[25];
+    uint8 comma = 0;
     double temp_fraction;
 
     /* Checking if the latitude is correct to start parsing */
     if(GPS_buff[0] == '3' && GPS_buff[1] == '0')
     {
-        latitude[0] = GPS_buff[0];
-        latitude[1] = GPS_buff[1];
-        latitude[2] = '.';
+        latitude[1] = GPS_buff[0];
+        latitude[2] = GPS_buff[1];
+        latitude[3] = '.';
 
-        while(GPS_buff[i] != '\0')
+        while(1)
         {
           if(GPS_buff[i] == '.')
           {
           }
           else if(GPS_buff[i] == ',')
           {
-            i++;
-            j++;
-            break;
+            comma++;
+              if(comma == 2)
+              {
+                comma = 0;
+                i++;
+                j++;
+                break;
+              }
           }
 
           else if (GPS_buff[i] == 'N')
-          {}
+          { latitude[0] = '+'; }
           else if(GPS_buff[i] == 'S')
-          {}
+          { latitude[0] = '-'; }
           else
           {
             latitude[j] = GPS_buff[i];
@@ -125,36 +134,39 @@ void GPS_parsing(void)
           i++;
         }
         latitude[j] = '\0';
-
-        i+=2;
-
-
         while(GPS_buff[i] == '0')
         {
-          i++;
+        	i++;
         }
-
-        j = 3;
-        longitude[0] = GPS_buff[i];
-        longitude[1] = GPS_buff[i+1];
-        longitude[2] = '.';
+        j=4;
+        
+        
+        longitude[1] = GPS_buff[i];
+        longitude[2] = GPS_buff[i+1];
+        longitude[3] = '.';
         i+=2;
-        while(GPS_buff[i] != '\0')
+
+        while(1)
         {
           if(GPS_buff[i] == '.')
           {
           }
           else if(GPS_buff[i] == ',')
           {
-            i++;
-            j++;
-            break;
+            comma++;
+              if(comma == 2)
+              {
+                comma = 0;
+                i++;
+                j++;
+                break;
+              }
           }
 
-          else if (GPS_buff[i] == 'N')
-          {}
-          else if(GPS_buff[i] == 'S')
-          {}
+          else if (GPS_buff[i] == 'E')
+          { longitude[0] = '+'; }
+          else if(GPS_buff[i] == 'W')
+          { longitude[0] = '-'; }
           else
           {
             longitude[j] = GPS_buff[i];
@@ -165,10 +177,10 @@ void GPS_parsing(void)
         longitude[j] = '\0';
 
 
-        temp_buff[0] = latitude[3];
-        temp_buff[1] = latitude[4];
+        temp_buff[0] = latitude[4];
+        temp_buff[1] = latitude[5];
         temp_buff[2] = '.';
-        j=5;
+        j=6;
         i=3;
         while(latitude[j] != '\0')
         {
@@ -182,13 +194,17 @@ void GPS_parsing(void)
         temp_fraction = atof(temp_buff);
         temp_fraction /= 60;
         temp_fraction += 30;
+        if(latitude[0] == '-')
+        {
+        	temp_fraction *= -1;
+        }
         sprintf(latitude,"%.7f", temp_fraction);
 
 
-        temp_buff[0] = longitude[3];
-        temp_buff[1] = longitude[4];
+        temp_buff[0] = longitude[4];
+        temp_buff[1] = longitude[5];
         temp_buff[2] = '.';
-        j=5;
+        j=6;
         i=3;
         while(longitude[j] != '\0')
         {
@@ -200,7 +216,19 @@ void GPS_parsing(void)
         temp_fraction = atof(temp_buff);
         temp_fraction /= 60;
         temp_fraction += 31;
+        if(longitude[0] == '-')
+        {
+           temp_fraction *= -1;
+        }
         sprintf(longitude,"%.7f", temp_fraction);
+        
+        new_distance(previouse_latitude, previouse_longitude, atof(latitude), atof(longitude));
+        
+        if(GPS_newDistance <= 5)
+        {
+          previouse_latitude = atof(latitude);
+          previouse_longitude = atof(longitude);
+        }
     }
     else
     {
@@ -209,10 +237,38 @@ void GPS_parsing(void)
     }
 }
 
+double deg2rad(double deg) {
+        return (deg * PI / 180.0);
+    }
+
+double rad2deg(double rad) {
+        return (rad * 180.0 /PI);
+    }
+
+void new_distance(double lat1,double lon1,double lat2,double lon2)
+{
+  if(lat1 != 0 && lon1 != 0)
+  {
+      double theta = lon1 - lon2;
+        double dist = sin(deg2rad(lat1))
+                * sin(deg2rad(lat2))
+                + cos(deg2rad(lat1))
+                * cos(deg2rad(lat2))
+                * cos(deg2rad(theta));
+        dist = acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+      GPS_newDistance = ceil(1609.344*dist);
+  }
+}
+
 
 void GPS_sendCoordinates()
 {
-    uint8 i=0;
+  if(latitude[0] != '\0' && longitude[0] != '\0')
+  {
+      uint8 i=0;
+   
     while(latitude[i] != '\0')
     {
       bluetooth_sendByte(latitude[i]);
@@ -225,6 +281,8 @@ void GPS_sendCoordinates()
       bluetooth_sendByte(longitude[i]);
       i++;
     }
-    bluetooth_sendByte('/');
-    
+     bluetooth_sendByte('/');
+     latitude[0] = '\0';
+     longitude[0] = '\0'; 
+  }
 }
