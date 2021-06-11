@@ -26,6 +26,7 @@ extern void SysTick_Handler( void );
 
 /* TM4C123GH6PM Specific Interrupts */
 extern void bluetooth_receiveByte(void);
+extern void Timer0A_Handler(void);
 extern void GPS_receive(void);
 
 
@@ -82,7 +83,7 @@ const intvec_elem __vector_table[] =
   0, /*16*/
   0, /*17*/
   0, /*18*/
-  0, /*19*/
+  Timer0A_Handler, /*19*/
   0, /*20 */
   0, /*21 */
   0, /*22 */
