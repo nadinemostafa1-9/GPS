@@ -255,3 +255,19 @@ void LCD_update()
     }
   }
 }
+
+void update_buzzer()
+{
+    if(buzzer_flag == 1 || GPS_TotalDistance >= 100)
+        buzzer_on();
+    else
+        buzzer_off();        
+}
+
+void LED_update()
+{
+  if(GPS_TotalDistance >= 100)
+    LED_on();
+  else
+    LED_off();
+}
