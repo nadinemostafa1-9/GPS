@@ -153,3 +153,84 @@ void bluetooth_checking()
     bluetooth_buff[0] = '\0';
   }
 }
+
+void GPS_checking()
+{
+  /* car isn't stopped, gps new message, system is unlocked, new trajectory mode */
+  if(carMovment == 1 && GPS_NewMessageFlag == 1 && systemUnlocked == 1 && trajectoryMode == 1)
+  {
+      GPS_NewMessageFlag = 0;
+      GPS_parsing();
+      if(GPS_newDistance <= 5)
+      {
+         if(latitude[0] == '3' && longitude[0] == '3')
+        {
+            GPS_sendCoordinates();
+            GPS_sendCoordinates();
+            GPS_sendCoordinates();
+            
+            GPS_TotalDistance += GPS_newDistance;
+            GPS_newDistance = 0;
+            
+            if(stooring_flag == 0)
+            {
+              double lat = atof(latitude);
+              int x = lat * 10000000;
+              coordinates_array[GPS_i] = x;
+              GPS_i++;
+               
+              lat = atof(longitude);
+              x = lat * 10000000;
+              coordinates_array[GPS_i] = x;
+              GPS_i++;
+
+              coordinates_array[0] = GPS_i;
+              if (GPS_TotalDistance >= 100)
+              {
+                stooring_flag == 1;
+                EEPROM_write(coordinates_array, coordinates_array[0]);
+              }
+            }
+        }
+      }
+  }
+  else if(systemUnlocked == 1 && trajectoryMode == 2)
+  {
+      int j;
+      EEPROM_read(&j, 1);
+      LCD_integertostring(j);
+      Delay_MS(1000);
+      EEPROM_read(coordinates_array, j);
+      
+      for(uint8 i=1; i<j; i++)
+      {
+        int k = 0;
+        uint8 arr[15];
+        sprintf(arr, "%.0f", coordinates_array[i]);
+        if(arr[0] == '-')
+        {
+          bluetooth_sendByte(arr[0]);
+          bluetooth_sendByte(arr[1]);
+          bluetooth_sendByte(arr[2]);
+          bluetooth_sendByte('.');
+          k=3;
+        }
+        else
+        {
+          bluetooth_sendByte(arr[0]);
+          bluetooth_sendByte(arr[1]);
+          bluetooth_sendByte('.');
+          k=2;
+        }
+        while(arr[k] != '\0')
+        {
+          bluetooth_sendByte(arr[k]);
+        }
+        if(i%2 == 1)
+          bluetooth_sendByte(' ');
+        else
+           bluetooth_sendByte('/');
+      }
+      trajectoryMode = 0;
+  }
+}
