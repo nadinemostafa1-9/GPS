@@ -21,4 +21,6 @@ void Init_Task(void);
 
 void bluetooth_checking(void);
 
+void GPS_checking();
+
 #endif /* APP_H_ */
