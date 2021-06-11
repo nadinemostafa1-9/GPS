@@ -23,4 +23,6 @@ void bluetooth_checking(void);
 
 void GPS_checking();
 
+void LCD_update();
+
 #endif /* APP_H_ */
