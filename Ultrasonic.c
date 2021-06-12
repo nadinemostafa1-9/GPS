@@ -61,3 +61,10 @@ void Ultrasonic_startTrigger()
   Delay_MS(0.001); /*10 seconds delay */
   GPIO_PORTD_DATA_REG |= (1<<3); /* make trigger  pin high */
 }
+
+uint8 measure_distance()
+{
+  uint32 Pulse_Duration = lastEdge - thisEdge;
+  uint32 distance = (Pulse_Duration * 340000)/(2 * 1000000);
+  return distance;
+}
