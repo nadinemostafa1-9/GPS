@@ -42,3 +42,11 @@ void Pins_Init()
   GPIO_PORTF_DEN_REG |= 0x01;
   
 }
+
+
+void Ultrasonic_Init()
+{
+  Pins_Init();
+  Timer0_init();
+}
+
