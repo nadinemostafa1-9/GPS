@@ -50,3 +50,14 @@ void Ultrasonic_Init()
   Timer0_init();
 }
 
+void Ultrasonic_startTrigger()
+{
+  /* Given 10us trigger pulse */
+  GPIO_PORTD_DATA_REG &= ~(1<<3); /* make trigger  pin low */
+  Delay_MS(0.001); /*10 seconds delay */
+  GPIO_PORTD_DATA_REG |= (1<<3); /* make trigger  pin high */
+  Delay_MS(0.001); /*10 seconds delay */
+  GPIO_PORTD_DATA_REG &= ~(1<<3); /* make trigger  pin low */
+  Delay_MS(0.001); /*10 seconds delay */
+  GPIO_PORTD_DATA_REG |= (1<<3); /* make trigger  pin high */
+}
