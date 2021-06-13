@@ -20,6 +20,7 @@ uint32 volatile lastEdge = 0, thisEdge = 0;
  *******************************************************************************/
 void Timer0A_Handler( void )
 {
+  Timer->ICR |= 0x00000004; 
   Timer0_DutyCycle();  
 }
 
@@ -33,6 +34,7 @@ void Timer0_init()
     TIMER0_GPTMICR_REG |= 0x04;
     TIMER0_GPTMIMR_REG |= 0x05;
     NVIC_EN0_REG = 1<<19;
+    NVIC_PRI4_REG = (NVIC_PRI4_REG & 0x1FFFFFFF)|(0x20000000);//setting pariority 1 (31-29)
     TIMER0_GPTMCTL_REG |= 0x0C;
     TIMER0_GPTMCTL_REG |= (1<<0);    
 }
@@ -48,6 +50,6 @@ void Timer0_DutyCycle()
   else if(flag == 1)
   {
     thisEdge = TIMER0_GPTMTAR_REG;
-    flag++;
+    flag == 0;
   }
 }
