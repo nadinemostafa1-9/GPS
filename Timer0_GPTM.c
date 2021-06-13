@@ -32,7 +32,7 @@ void Timer0_init()
     TIMER0_GPTMTAMR_REG = 0x17; //up count, capture mode timer and edge time mode
     TIMER0_GPTMTAPR_REG = 0;
     TIMER0_GPTMICR_REG |= 0x04;
-    TIMER0_GPTMIMR_REG |= 0x05;
+    TIMER0_GPTMIMR_REG |= 0x04;
     NVIC_EN0_REG = 1<<19;
     NVIC_PRI4_REG = (NVIC_PRI4_REG & 0x1FFFFFFF)|(0x20000000);//setting pariority 1 (31-29)
     TIMER0_GPTMCTL_REG |= 0x0C;
@@ -50,6 +50,6 @@ void Timer0_DutyCycle()
   else if(flag == 1)
   {
     thisEdge = TIMER0_GPTMTAR_REG;
-    flag == 0;
+    flag = 0;
   }
 }
