@@ -1,4 +1,5 @@
 GPS Tracker Project
+
 The system is an RC car with GPS and Bluetooth chips controlled by TM4C123GH6PM (ARM Cortex-M4) microcontroller. This system is controlled by an android app to move the car, change its speed, displaying the GPS coordinates sent by the car through Bluetooth chip.
 
 •	The system mainly has three modes of operation:
